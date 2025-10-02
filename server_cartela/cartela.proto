@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package cartela;
+
+import "google/protobuf/empty.proto";
+
+message Cartela {
+    int32 usuario = 1;
+    map<int32, int32> campo = 25;
+}
+
+message Vencedor {
+    int32 usuario = 1;
+}
+
+message RequestNumber {
+    int32 number = 1;
+}
+
+message CartelasList {
+    repeated Cartela cartelas = 1;
+}
+
+service cartelaService {
+    rpc SendVencedor(google.protobuf.Empty) returns(Vencedor);
+    rpc SendCartela(google.protobuf.Empty) returns(CartelasList);
+    rpc SendCartelaAtualizada(RequestNumber) returns(CartelasList);
+}
