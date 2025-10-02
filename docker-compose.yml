@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  validation-service:
+    build:
+      context: ./service-b-python
+    container_name: bingo-validation
+    ports:
+      - "50052:50052"
+    networks:
+      - bingo-net
+
+  game-service:
+    build:
+      context: ./service-a-python
+    container_name: bingo-game
+    ports:
+      - "50051:50051"
+    depends_on:
+      - validation-service
+    networks:
+      - bingo-net
+    environment:
+      - VALIDATION_HOST=validation-service
+
+  api-gateway:
+    build:
+      context: ./stub-cpp
+    container_name: bingo-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - game-service
+    networks:
+      - bingo-net
+    environment:
+      - GAME_HOST=game-service
+      - VALIDATION_HOST=validation-service
+
+networks:
+  bingo-net:
+    driver: bridge

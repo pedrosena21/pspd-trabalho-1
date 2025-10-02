@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package examples;
+
+service ExamplesService {
+  rpc UnaryCall(UnaryRequest) returns (UnaryResponse);
+  rpc ServerStreaming(ServerStreamRequest) returns (stream ServerStreamResponse);
+  rpc ClientStreaming(stream ClientStreamRequest) returns (ClientStreamResponse);
+  rpc BidirectionalStreaming(stream BidiRequest) returns (stream BidiResponse);
+}
+
+message UnaryRequest {
+  string message = 1;
+}
+
+message UnaryResponse {
+  string response = 1;
+  int32 timestamp = 2;
+}
+
+message ServerStreamRequest {
+  int32 count = 1;
+  int32 delay_ms = 2;
+}
+
+message ServerStreamResponse {
+  int32 sequence_number = 1;
+  string data = 2;
+}
+
+message ClientStreamRequest {
+  int32 value = 1;
+}
+
+message ClientStreamResponse {
+  int32 sum = 1;
+  int32 count = 2;
+  double average = 3;
+}
+
+message BidiRequest {
+  string message = 1;
+}
+
+message BidiResponse {
+  string echo = 1;
+  int32 char_count = 2;
+}
