@@ -20,7 +20,6 @@ docker compose build
 echo "📦 Aplicando os manifests do Kubernetes..."
 kubectl apply -f k8s/deployments.yaml
 kubectl apply -f k8s/services.yaml
-kubectl apply -f k8s/ingress.yaml
 
 # 5. Habilitar o Ingress
 echo "🌐 Habilitando o Ingress..."
