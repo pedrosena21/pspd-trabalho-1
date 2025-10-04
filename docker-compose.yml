@@ -29,19 +29,15 @@ services:
       - bingo-network
     restart: unless-stopped
 
-  # Stub C++ - API Gateway
-  stub-cpp:
+  stub-node:
     build:
-      context: ./stub-cpp
-      dockerfile: Dockerfile
-    container_name: bingo-stub-cpp
+      context: .
+      dockerfile: ./stub-node/Dockerfile
+    container_name: bingo-stub-node
     ports:
       - "8080:8080"
     networks:
       - bingo-network
-    environment:
-      - GAME_SERVICE_ADDR=service-a:50051
-      - VALIDATION_SERVICE_ADDR=service-b:50052
     depends_on:
       - service-a
       - service-b

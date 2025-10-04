@@ -24,6 +24,7 @@ class GameServiceServicer(bingo_pb2_grpc.GameServiceServicer):
         self.validation_stub = validation_stub
 
     def CreateGame(self, request, context):
+        print('JOGO CRIADO', request)
         game_id = str(uuid.uuid4())
         self.games[game_id] = Game(game_id, request.game_name)
         print(f"[GAME SERVICE] Jogo criado: {request.game_name} ({game_id})")
