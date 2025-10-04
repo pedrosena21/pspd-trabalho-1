@@ -1,5 +1,5 @@
-
 #!/bin/bash
+
 set -e
 
 echo "🚀 Iniciando deploy do projeto no Minikube..."

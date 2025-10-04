@@ -10,7 +10,7 @@ import json
 
 
 class BingoPlayer:
-    def __init__(self, player_name, stub_url='http://localhost:8080'):
+    def __init__(self, player_name, stub_url='http://bingo-api:80'):
         self.player_name = player_name
         self.stub_url = stub_url
 
@@ -216,7 +216,7 @@ class BingoPlayer:
             return []
 
 
-def test_connection(stub_url='http://localhost:8080'):
+def test_connection(stub_url='http://bingo-api:80'):
     """Testa a conexão com o stub"""
     print("\n🔍 Testando conexão com o stub C++...")
     try:
@@ -317,7 +317,7 @@ def test_api_endpoints():
         return
 
     session = requests.Session()
-    stub_url = 'http://localhost:8080'
+    stub_url = 'http://bingo-api:80'
 
     # 1. Criar jogo
     print("1️⃣  Criando jogo...")
