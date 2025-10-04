@@ -6,6 +6,7 @@ services:
     build:
       context: ./service-a-python
       dockerfile: Dockerfile
+    image: service-a-python
     container_name: bingo-game-service
     ports:
       - "50051:50051"
@@ -22,6 +23,7 @@ services:
     build:
       context: ./service-b-python
       dockerfile: Dockerfile
+    image: service-b-python
     container_name: bingo-validation-service
     ports:
       - "50052:50052"
@@ -33,6 +35,7 @@ services:
     build:
       context: .
       dockerfile: ./stub-node/Dockerfile
+    image: stub-node
     container_name: bingo-stub-node
     ports:
       - "8080:8080"

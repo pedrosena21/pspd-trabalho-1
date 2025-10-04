@@ -1,0 +1,40 @@
+# k8s/services.yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stub-node-service
+spec:
+  selector:
+    app: stub-node
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: game-server-service
+spec:
+  selector:
+    app: game-server
+  ports:
+    - protocol: TCP
+      port: 50051
+      targetPort: 50051
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: validation-server-service
+spec:
+  selector:
+    app: validation-server
+  ports:
+    - protocol: TCP
+      port: 50052
+      targetPort: 50052
+  type: ClusterIP

@@ -1,0 +1,64 @@
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stub-node-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stub-node
+  template:
+    metadata:
+      labels:
+        app: stub-node
+    spec:
+      containers:
+        - name: stub-node
+          image: stub-node
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: game-server-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: game-server
+  template:
+    metadata:
+      labels:
+        app: game-server
+    spec:
+      containers:
+        - name: game-server
+          image:  service-a-python
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 50051
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: validation-server-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: validation-server
+  template:
+    metadata:
+      labels:
+        app: validation-server
+    spec:
+      containers:
+        - name: validation-server
+          image: service-b-python
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 50052

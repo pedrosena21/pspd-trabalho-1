@@ -15,6 +15,7 @@ const swaggerDefinition = {
   },
   servers: [
     { url: 'http://localhost:8080', description: 'Servidor local' },
+    { url: 'http://bingo-api:80', description: 'Ingress' },
   ],
 };
 
