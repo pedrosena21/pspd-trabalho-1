@@ -25,6 +25,12 @@ kubectl apply -f k8s/services.yaml
 echo "🌐 Habilitando o Ingress..."
 minikube addons enable ingress
 
+kubectl wait --namespace ingress-nginx \
+  --for=condition=ready pod \
+  --selector=app.kubernetes.io/component=controller \
+  --timeout=90s
+echo "✅ Ingress habilitado."
+
 # 6. Criar o recurso de ingress
 kubectl apply -f k8s/ingress.yaml
 
