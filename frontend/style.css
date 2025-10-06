@@ -32,7 +32,6 @@ h2 {
     margin-top: 25px;
 }
 
-/* Informações do Jogo */
 #game-info {
     display: flex;
     justify-content: space-around;
@@ -47,7 +46,6 @@ h2 {
     color: #007bff;
 }
 
-/* Área do Número Sorteado */
 #draw-area {
     margin-bottom: 30px;
     padding: 15px;
@@ -74,7 +72,6 @@ h2 {
     transform: scale(1.05);
 }
 
-/* Tabela do Bingo */
 #bingo-card {
     width: 100%;
     border-collapse: collapse;
@@ -83,7 +80,7 @@ h2 {
 }
 
 #bingo-card th {
-    background-color: #3703f5; /* Cor vermelha do bingo */
+    background-color: #3703f5;
     color: white;
     padding: 15px 5px;
     font-size: 1.2em;
@@ -121,12 +118,12 @@ h2 {
 }
 
 #start-game-btn {
-    background-color: #007bff; /* Azul para iniciar */
+    background-color: #007bff;
     color: white;
 }
 
 #draw-btn {
-    background-color: #04b404; /* Verde para sortear */
+    background-color: #04b404;
     color: white;
 }
 
