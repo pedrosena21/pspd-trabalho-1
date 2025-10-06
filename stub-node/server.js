@@ -5,6 +5,7 @@ const protoLoader = require('@grpc/proto-loader');
 const path = require('path');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
+const cors = require('cors');
 
 const swaggerDefinition = {
   openapi: '3.0.0',
@@ -46,6 +47,15 @@ const validationClient = new bingoProto.ValidationService('validation-server-ser
 // CONFIGURAÇÃO DO SERVIDOR HTTP
 // ======================
 const app = express();
+
+const corsOptions = {
+    origin: '*', // Coloque '*' para permitir todas, ou url para ser específico. 
+    methods: 'GET,POST,DELETE', // Métodos HTTP permitidos
+    allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
