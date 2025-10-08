@@ -24,7 +24,7 @@ Server Version: v1.34.0
 
 ### Frontend
 
-```docker build -t bingo_frontend .```
+```docker build -t bingo_frontend frontend/```
 
 ```docker run -p 3000:80 bingo_frontend```
 

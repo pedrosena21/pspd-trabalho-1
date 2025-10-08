@@ -37,55 +37,33 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderCard(cardNumbers) {
         bingoCardBody.innerHTML = '';
         
-        const cardCells = generateDemoCard(cardNumbers);
+        const cardCells = cardNumbers;
+
+        let middleIndex = Math.floor(cardNumbers.length / 2); 
+
+        cardCells.splice(middleIndex, 0, 0);
+
+        var freeRow = false;
 
         for (let i = 0; i < 5; i++) {
             const row = bingoCardBody.insertRow();
             for (let j = 0; j < 5; j++) {
-                const cell = row.insertCell();
-                const number = cardCells[i * 5 + j];
-                cell.textContent = number;
-                cell.dataset.number = number;
-                cell.addEventListener('click', () => markNumber(cell, number));
-
                 // Marcar o centro como "FREE" (3,3)
+                const cell = row.insertCell();
                 if (i === 2 && j === 2) {
                     cell.textContent = 'FREE';
                     cell.classList.add('marked');
                     cell.dataset.number = '0'; // Usar 0 para representar o free space
                     cell.removeEventListener('click', markNumber);
                 }
+                else{
+                    const number = cardCells[i * 5 + j];
+                    cell.textContent = number;
+                    cell.dataset.number = number;
+                    cell.addEventListener('click', () => markNumber(cell, number));
+                }
             }
         }
-    }
-
-    function generateDemoCard(initialNumbers) {
-        const card = [];
-        COLUMN_KEYS.forEach((key, colIndex) => {
-            const [min, max] = BINGO_COLUMNS[key];
-            const colNumbers = new Set();
-            while (colNumbers.size < 5) {
-                const num = Math.floor(Math.random() * (max - min + 1)) + min;
-                colNumbers.add(num);
-            }
-            card.push(...Array.from(colNumbers));
-        });
-        
-        let shuffledCard = [];
-        for (let i = 0; i < 5; i++) {
-            for (let j = 0; j < 5; j++) {
-                shuffledCard.push(card[j * 5 + i]); 
-            }
-        }
-        
-        const finalCard = [];
-        for (let row = 0; row < 5; row++) {
-            for (let col = 0; col < 5; col++) {
-                finalCard.push(card[col * 5 + row]);
-            }
-        }
-        
-        return finalCard;
     }
 
     async function startGame() {
@@ -133,28 +111,10 @@ document.addEventListener('DOMContentLoaded', () => {
             PLAYER_ID = playerData.player_id;
             playerIdSpan.textContent = PLAYER_ID;
 
-            // 4. Registrar Cartão do Jogador 
-            const registerCardResponse = await fetch(`${API_BASE_URL}/register-card`, {
-                method: 'POST',
-                headers: { 
-                    'accept': 'application/json',
-                    'Content-Type': 'application/json' 
-                },
-                body: JSON.stringify({ player_id: PLAYER_ID, card_numbers: playerData.card_numbers })
-            });
-
-            if (!registerCardResponse.ok) throw new Error('Falha ao registrar o cartão.');
-            const cardData = await registerCardResponse.json();
-
-            if (!cardData.success) {
-                displayMessage('Erro ao registrar cartão: ' + (cardData.message || 'Desconhecido'), 'error');
-                return;
-            }
-
-            // 5. Renderizar Cartão
-            renderCard(playerData.card_numbers);
+            // 4. Renderizar Cartão
+            renderCard(playerData.card);
             
-            // 6. Atualizar UI
+            // 5. Atualizar UI
             drawBtn.disabled = false;
             startGameBtn.disabled = true;
             ROUND_NUMBER = 0;
