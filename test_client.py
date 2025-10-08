@@ -64,7 +64,8 @@ class BingoPlayer:
                 data = response.json()
                 if data.get('success'):
                     self.player_id = data['player_id']
-                    self.card = data['card_numbers']  # ✅ Nome correto do campo
+                    print(data)
+                    self.card = data['card']  # ✅ Nome correto do campo
                     print(f"\n{'='*60}")
                     print(f"Jogador: {self.player_name}")
                     print(f"ID: {self.player_id}")
