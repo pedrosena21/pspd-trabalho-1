@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  # Serviço A - Game Service (Python)
+  service-a:
+    build:
+      context: ./service-a-python
+      dockerfile: Dockerfile
+    image: service-a-python
+    container_name: bingo-game-service
+    ports:
+      - "50051:50051"
+    networks:
+      - bingo-network
+    environment:
+      - VALIDATION_SERVICE_ADDR=service-b:50052
+    depends_on:
+      - service-b
+    restart: unless-stopped
+
+  # Serviço B - Validation Service (Python)
+  service-b:
+    build:
+      context: ./service-b-python
+      dockerfile: Dockerfile
+    image: service-b-python
+    container_name: bingo-validation-service
+    ports:
+      - "50052:50052"
+    networks:
+      - bingo-network
+    restart: unless-stopped
+
+  stub-node:
+    build:
+      context: .
+      dockerfile: ./stub-node/Dockerfile
+    image: stub-node
+    container_name: bingo-stub-node
+    ports:
+      - "8080:8080"
+    networks:
+      - bingo-network
+    depends_on:
+      - service-a
+      - service-b
+    restart: unless-stopped
+
+networks:
+  bingo-network:
+    driver: bridge
