@@ -1,4 +1,3 @@
-
 const express = require('express');
 const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
@@ -16,13 +15,13 @@ const swaggerDefinition = {
   },
   servers: [
     { url: 'http://localhost:8080', description: 'Servidor local' },
-    { url: 'http://bingo-api:80', description: 'Ingress' },
+    { url: 'http://bingo-api', description: 'Ingress' },
   ],
 };
 
 const options = {
   swaggerDefinition,
-  apis: ['./server.js'], // Arquivo com as anotações dos endpoints
+  apis: ['./server.js'],
 };
 
 const swaggerSpec = swaggerJSDoc(options);
@@ -43,31 +42,30 @@ const bingoProto = grpc.loadPackageDefinition(packageDefinition).bingo;
 const gameClient = new bingoProto.GameService('game-server-service:50051', grpc.credentials.createInsecure());
 const validationClient = new bingoProto.ValidationService('validation-server-service:50052', grpc.credentials.createInsecure());
 
-// ======================
-// CONFIGURAÇÃO DO SERVIDOR HTTP
-// ======================
 const app = express();
 
 const corsOptions = {
-    origin: '*', // Coloque '*' para permitir todas, ou url para ser específico. 
-    methods: 'GET,POST,DELETE', // Métodos HTTP permitidos
-    allowedHeaders: ['Content-Type', 'Authorization']
+  origin: '*',
+  methods: 'GET,POST,DELETE',
+  allowedHeaders: ['Content-Type', 'Authorization']
 };
 
 app.use(cors(corsOptions));
-
 app.use(express.json());
-
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// ======================
-// ENDPOINTS HTTP → CHAMADAS gRPC
-// ======================
+// Health check
+app.get('/', (req, res) => {
+  res.json({ status: 'ok', service: 'Bingo API Gateway' });
+});
 
-// Criar jogo
+// ===================================
+// ENDPOINTS COMPATÍVEIS COM O TESTE
+// ===================================
+
 /**
  * @openapi
- * /create-game:
+ * /game/create:
  *   post:
  *     summary: Cria um novo jogo de bingo
  *     requestBody:
@@ -79,29 +77,26 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
  *             properties:
  *               game_name:
  *                 type: string
- *                 example: "Bingo do Da UnB"
  *     responses:
  *       200:
- *         description: Jogo criado com sucesso
+ *         description: Jogo criado
  */
-app.post('/create-game', (req, res) => {
+app.post('/game/create', (req, res) => {
   const { game_name } = req.body;
-
   gameClient.CreateGame({ game_name }, (err, response) => {
     if (err) {
-      console.error('Erro no gRPC:', err);
-      return res.status(500).json({ error: err.message });
+      console.error('Erro no gRPC CreateGame:', err);
+      return res.status(500).json({ success: false, error: err.message });
     }
-    res.json(response);
+    res.json({ success: true, game_id: response.game_id });
   });
 });
 
 /**
  * @openapi
- * /register-player:
+ * /game/register:
  *   post:
- *     summary: Registra um jogador em um jogo existente
- *     description: Cria um jogador vinculado a um jogo existente, gerando seu cartão de bingo.
+ *     summary: Registra um jogador
  *     requestBody:
  *       required: true
  *       content:
@@ -111,48 +106,32 @@ app.post('/create-game', (req, res) => {
  *             properties:
  *               game_id:
  *                 type: string
- *                 example: "abc123"
  *               player_name:
  *                 type: string
- *                 example: "Pedro"
  *     responses:
  *       200:
- *         description: Jogador registrado com sucesso
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 player_id:
- *                   type: string
- *                   example: "p1"
- *                 card_numbers:
- *                   type: array
- *                   items:
- *                     type: integer
- *                   example: [5, 12, 34, 48, 71]
- *                 success:
- *                   type: boolean
- *                   example: true
+ *         description: Jogador registrado
  */
-app.post('/register-player', (req, res) => {
+app.post('/game/register', (req, res) => {
   const { game_id, player_name } = req.body;
-
   gameClient.RegisterPlayer({ game_id, player_name }, (err, response) => {
     if (err) {
-      console.error('Erro no gRPC:', err);
-      return res.status(500).json({ error: err.message });
+      console.error('Erro no gRPC RegisterPlayer:', err);
+      return res.status(500).json({ success: false, error: err.message });
     }
-    res.json(response);
+    res.json({
+      success: response.success,
+      player_id: response.player_id,
+      card: response.card_numbers
+    });
   });
 });
 
 /**
  * @openapi
- * /register-player:
+ * /game/draw:
  *   post:
- *     summary: Registra um jogador em um jogo existente
- *     description: Cria um jogador vinculado a um jogo existente, gerando seu cartão de bingo.
+ *     summary: Sorteia um número
  *     requestBody:
  *       required: true
  *       content:
@@ -162,81 +141,29 @@ app.post('/register-player', (req, res) => {
  *             properties:
  *               game_id:
  *                 type: string
- *                 example: "abc123"
- *               player_name:
- *                 type: string
- *                 example: "Pedro"
  *     responses:
  *       200:
- *         description: Jogador registrado com sucesso
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 player_id:
- *                   type: string
- *                   example: "p1"
- *                 card_numbers:
- *                   type: array
- *                   items:
- *                     type: integer
- *                   example: [5, 12, 34, 48, 71]
- *                 success:
- *                   type: boolean
- *                   example: true
+ *         description: Número sorteado
  */
-
-/**
- * @openapi
- * /draw-number:
- *   post:
- *     summary: Sorteia um número no jogo de bingo
- *     description: Solicita ao servidor gRPC o sorteio de um novo número.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               game_id:
- *                 type: string
- *                 example: "abc123"
- *     responses:
- *       200:
- *         description: Número sorteado com sucesso
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 number:
- *                   type: integer
- *                   example: 42
- *                 success:
- *                   type: boolean
- *                   example: true
- */
-
-app.post('/draw-number', (req, res) => {
+app.post('/game/draw', (req, res) => {
   const { game_id } = req.body;
-
   gameClient.DrawNumber({ game_id }, (err, response) => {
     if (err) {
-      console.error('Erro no gRPC:', err);
-      return res.status(500).json({ error: err.message });
+      console.error('Erro no gRPC DrawNumber:', err);
+      return res.status(500).json({ success: false, error: err.message });
     }
-    res.json(response);
+    res.json({
+      success: response.success,
+      number: response.number
+    });
   });
 });
 
 /**
  * @openapi
- * /mark-number:
+ * /game/mark:
  *   post:
- *     summary: Marca um número no cartão do jogador
- *     description: Marca um número sorteado no cartão do jogador específico.
+ *     summary: Marca um número
  *     requestBody:
  *       required: true
  *       content:
@@ -246,43 +173,30 @@ app.post('/draw-number', (req, res) => {
  *             properties:
  *               game_id:
  *                 type: string
- *                 example: "abc123"
  *               player_id:
  *                 type: string
- *                 example: "p1"
  *               number:
  *                 type: integer
- *                 example: 42
  *     responses:
  *       200:
- *         description: Número marcado com sucesso
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
+ *         description: Número marcado
  */
-app.post('/mark-number', (req, res) => {
+app.post('/game/mark', (req, res) => {
   const { game_id, player_id, number } = req.body;
-
   gameClient.MarkNumber({ game_id, player_id, number }, (err, response) => {
     if (err) {
-      console.error('Erro no gRPC:', err);
-      return res.status(500).json({ error: err.message });
+      console.error('Erro no gRPC MarkNumber:', err);
+      return res.status(500).json({ success: false, error: err.message });
     }
-    res.json(response);
+    res.json({ success: response.success });
   });
 });
 
 /**
  * @openapi
- * /check-bingo:
+ * /game/bingo:
  *   post:
- *     summary: Verifica se o jogador completou um bingo
- *     description: Retorna verdadeiro caso o jogador tenha completado um bingo válido.
+ *     summary: Verifica bingo
  *     requestBody:
  *       required: true
  *       content:
@@ -292,215 +206,59 @@ app.post('/mark-number', (req, res) => {
  *             properties:
  *               game_id:
  *                 type: string
- *                 example: "abc123"
  *               player_id:
  *                 type: string
- *                 example: "p1"
  *     responses:
  *       200:
- *         description: Resultado da verificação de bingo
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 bingo:
- *                   type: boolean
- *                   example: false
+ *         description: Resultado da verificação
  */
-app.post('/check-bingo', (req, res) => {
+app.post('/game/bingo', (req, res) => {
   const { game_id, player_id } = req.body;
-
   gameClient.CheckBingo({ game_id, player_id }, (err, response) => {
     if (err) {
-      console.error('Erro no gRPC:', err);
-      return res.status(500).json({ error: err.message });
+      console.error('Erro no gRPC CheckBingo:', err);
+      return res.status(500).json({ bingo: false, error: err.message });
     }
-    res.json(response);
+    res.json({ bingo: response.bingo });
   });
 });
 
 /**
  * @openapi
- * /validate-number:
- *   post:
- *     summary: Valida se um número pertence ao cartão do jogador
- *     description: Verifica se o número informado existe no cartão do jogador.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               player_id:
- *                 type: string
- *                 example: "p1"
- *               number:
- *                 type: integer
- *                 example: 42
+ * /game/card:
+ *   get:
+ *     summary: Obtém cartela do jogador
+ *     parameters:
+ *       - name: player_id
+ *         in: query
+ *         required: true
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
- *         description: Resultado da validação do número
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
+ *         description: Cartela do jogador
  */
-app.post('/validate-number', (req, res) => {
-  const { player_id, number } = req.body;
-
-  validationClient.ValidateNumber({ player_id, number }, (err, response) => {
-    if (err) {
-      console.error('Erro no gRPC:', err);
-      return res.status(500).json({ error: err.message });
-    }
-    res.json(response);
-  });
-});
-
-/**
- * @openapi
- * /validate-bingo:
- *   post:
- *     summary: Valida se a combinação de números constitui um bingo
- *     description: Recebe uma lista de números e valida se representam um bingo válido.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               player_id:
- *                 type: string
- *                 example: "p1"
- *               numbers:
- *                 type: array
- *                 items:
- *                   type: integer
- *                 example: [5, 12, 34, 48, 71]
- *     responses:
- *       200:
- *         description: Resultado da validação do bingo
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 bingo:
- *                   type: boolean
- *                   example: true
- */
-app.post('/validate-bingo', (req, res) => {
-  const { player_id, numbers } = req.body;
-
-  validationClient.ValidateBingo({ player_id, numbers }, (err, response) => {
-    if (err) {
-      console.error('Erro no gRPC:', err);
-      return res.status(500).json({ error: err.message });
-    }
-    res.json(response);
-  });
-});
-
-/**
- * @openapi
- * /get-card:
- *   post:
- *     summary: Obtém o cartão do jogador
- *     description: Retorna os números atuais do cartão de bingo do jogador.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               player_id:
- *                 type: string
- *                 example: "p1"
- *     responses:
- *       200:
- *         description: Cartão retornado com sucesso
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 card_numbers:
- *                   type: array
- *                   items:
- *                     type: integer
- *                   example: [1, 12, 34, 48, 70]
- */
-
-app.post('/get-card', (req, res) => {
-  const { player_id } = req.body;
-
+app.get('/game/card', (req, res) => {
+  const { player_id } = req.query;
   validationClient.GetCard({ player_id }, (err, response) => {
     if (err) {
-      console.error('Erro no gRPC:', err);
-      return res.status(500).json({ error: err.message });
+      console.error('Erro no gRPC GetCard:', err);
+      return res.status(500).json({ card: [], error: err.message });
     }
-    res.json(response);
+    res.json({ card: response.card_numbers });
   });
 });
 
-/**
- * @openapi
- * /register-card:
- *   post:
- *     summary: Registra manualmente um cartão de bingo
- *     description: Permite associar um cartão personalizado a um jogador existente.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               player_id:
- *                 type: string
- *                 example: "p1"
- *               card_numbers:
- *                 type: array
- *                 items:
- *                   type: integer
- *                 example: [3, 8, 19, 44, 67]
- *     responses:
- *       200:
- *         description: Cartão registrado com sucesso
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- */
-app.post('/register-card', (req, res) => {
-  const { player_id, card_numbers } = req.body;
+// Mantém endpoints antigos para compatibilidade com Swagger
+app.post('/create-game', (req, res) => req.app.handle({ ...req, url: '/game/create' }, res));
+app.post('/register-player', (req, res) => req.app.handle({ ...req, url: '/game/register' }, res));
+app.post('/draw-number', (req, res) => req.app.handle({ ...req, url: '/game/draw' }, res));
+app.post('/mark-number', (req, res) => req.app.handle({ ...req, url: '/game/mark' }, res));
+app.post('/check-bingo', (req, res) => req.app.handle({ ...req, url: '/game/bingo' }, res));
 
-  validationClient.RegisterCard({ player_id, card_numbers }, (err, response) => {
-    if (err) {
-      console.error('Erro no gRPC:', err);
-      return res.status(500).json({ error: err.message });
-    }
-    res.json(response);
-  });
-});
-
-// ======================
-// INICIA O SERVIDOR
-// ======================
 const PORT = 8080;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🌐 Servidor HTTP rodando em http://localhost:${PORT}`);
+  console.log(`📚 Documentação disponível em http://localhost:${PORT}/docs`);
   console.log(`→ Encaminhando requisições para servidores gRPC Python`);
 });

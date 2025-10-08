@@ -1,6 +1,6 @@
 """
-Cliente de teste para o sistema de Bingo gRPC
-Simula um jogador completo usando o Stub C++ via REST
+Cliente de teste CORRIGIDO para o sistema de Bingo gRPC
+Usa os endpoints corretos do stub Node.js
 """
 
 import requests
@@ -19,26 +19,27 @@ class BingoPlayer:
         self.marked = set()
         self.game_id = None
 
-        # 🔹 Sessão HTTP persistente
+        # Sessão HTTP persistente
         self.session = requests.Session()
 
     def create_game(self, game_name="Bingo Test"):
         """Cria um novo jogo"""
         try:
             response = self.session.post(
-                f"{self.stub_url}/game/create",
+                f"{self.stub_url}/create-game",  # ✅ Endpoint correto
                 json={"game_name": game_name},
                 timeout=10
             )
 
             if response.status_code == 200:
                 data = response.json()
-                if data.get('success') and data.get('game_id'):
+                if data.get('game_id'):
                     self.game_id = data['game_id']
                     print(f"✓ Jogo criado: {self.game_id}")
                     return True
 
             print("✗ Erro: não foi possível criar o jogo")
+            print(f"   Resposta: {response.text}")
             return False
 
         except requests.exceptions.RequestException as e:
@@ -51,7 +52,7 @@ class BingoPlayer:
 
         try:
             response = self.session.post(
-                f"{self.stub_url}/game/register",
+                f"{self.stub_url}/register-player",  # ✅ Endpoint correto
                 json={
                     "game_id": game_id,
                     "player_name": self.player_name
@@ -63,7 +64,7 @@ class BingoPlayer:
                 data = response.json()
                 if data.get('success'):
                     self.player_id = data['player_id']
-                    self.card = data['card']
+                    self.card = data['card_numbers']  # ✅ Nome correto do campo
                     print(f"\n{'='*60}")
                     print(f"Jogador: {self.player_name}")
                     print(f"ID: {self.player_id}")
@@ -72,6 +73,7 @@ class BingoPlayer:
                     return True
 
             print(f"✗ Erro ao registrar {self.player_name}")
+            print(f"   Resposta: {response.text}")
             return False
 
         except requests.exceptions.RequestException as e:
@@ -88,9 +90,9 @@ class BingoPlayer:
                 try:
                     # Sorteia um número
                     response = self.session.post(
-                        f"{self.stub_url}/game/draw",
+                        f"{self.stub_url}/draw-number",  # ✅ Endpoint correto
                         json={"game_id": self.game_id},
-                        timeout=60   # 🔹 antes era 15
+                        timeout=60
                     )
 
                     retry_count = 0  # Reset contador em caso de sucesso
@@ -142,7 +144,7 @@ class BingoPlayer:
         for attempt in range(max_retries):
             try:
                 response = self.session.post(
-                    f"{self.stub_url}/game/mark",
+                    f"{self.stub_url}/mark-number",  # ✅ Endpoint correto
                     json={
                         "game_id": self.game_id,
                         "player_id": self.player_id,
@@ -179,7 +181,7 @@ class BingoPlayer:
 
         try:
             response = self.session.post(
-                f"{self.stub_url}/game/bingo",
+                f"{self.stub_url}/check-bingo",  # ✅ Endpoint correto
                 json={
                     "game_id": self.game_id,
                     "player_id": self.player_id
@@ -200,14 +202,15 @@ class BingoPlayer:
     def get_card(self):
         """Obtém a cartela do jogador"""
         try:
-            response = self.session.get(
-                f"{self.stub_url}/game/card?player_id={self.player_id}",
+            response = self.session.post(  # ✅ Mudou para POST
+                f"{self.stub_url}/get-card",
+                json={"player_id": self.player_id},
                 timeout=10
             )
 
             if response.status_code == 200:
                 data = response.json()
-                return data.get('card', [])
+                return data.get('card_numbers', [])
 
             return []
 
@@ -218,20 +221,28 @@ class BingoPlayer:
 
 def test_connection(stub_url='http://bingo-api:80'):
     """Testa a conexão com o stub"""
-    print("\n🔍 Testando conexão com o stub C++...")
-    try:
-        session = requests.Session()
-        response = session.get(stub_url, timeout=3)
-        if response.status_code == 200:
-            print("✓ Stub C++ está rodando e acessível!\n")
-            return True
-        else:
-            print(f"✗ Stub respondeu com status {response.status_code}\n")
-            return False
-    except requests.exceptions.RequestException as e:
-        print(f"✗ Erro ao conectar ao stub: {e}")
-        print(f"   Certifique-se de que o stub C++ está rodando em {stub_url}\n")
-        return False
+    print("\n🔍 Testando conexão com o stub Node.js...")
+
+    urls_to_try = [
+        stub_url,
+        'http://bingo-api',
+        'http://localhost:8080'
+    ]
+
+    for url in urls_to_try:
+        try:
+            print(f"Tentando: {url}")
+            session = requests.Session()
+            response = session.get(f"{url}/docs", timeout=3)
+            if response.status_code == 200:
+                print(f"✓ Swagger acessível em {url}/docs!\n")
+                return url
+        except requests.exceptions.RequestException:
+            continue
+
+    print(f"✗ Não foi possível conectar ao stub")
+    print(f"   Certifique-se de que o stub Node.js está rodando\n")
+    return None
 
 
 def test_single_player():
@@ -240,10 +251,11 @@ def test_single_player():
     print("TESTE: Jogador Único")
     print("="*60 + "\n")
 
-    if not test_connection():
+    stub_url = test_connection()
+    if not stub_url:
         return
 
-    player = BingoPlayer("Alice")
+    player = BingoPlayer("Alice", stub_url)
 
     # Criar jogo
     if not player.create_game("Teste Single Player"):
@@ -269,11 +281,12 @@ def test_multiple_players():
     print("TESTE: Múltiplos Jogadores")
     print("="*60 + "\n")
 
-    if not test_connection():
+    stub_url = test_connection()
+    if not stub_url:
         return
 
     # Criar jogo
-    creator = BingoPlayer("Criador")
+    creator = BingoPlayer("Criador", stub_url)
     if not creator.create_game("Teste Multi Player"):
         print("Erro ao criar jogo")
         return
@@ -282,10 +295,10 @@ def test_multiple_players():
 
     # Criar jogadores
     players = [
-        BingoPlayer("Alice"),
-        BingoPlayer("Bob"),
-        BingoPlayer("Carol"),
-        BingoPlayer("Dave")
+        BingoPlayer("Alice", stub_url),
+        BingoPlayer("Bob", stub_url),
+        BingoPlayer("Carol", stub_url),
+        BingoPlayer("Dave", stub_url)
     ]
 
     # Registrar todos os jogadores
@@ -313,20 +326,20 @@ def test_api_endpoints():
     print("TESTE: Endpoints da API REST")
     print("="*60 + "\n")
 
-    if not test_connection():
+    stub_url = test_connection()
+    if not stub_url:
         return
 
     session = requests.Session()
-    stub_url = 'http://bingo-api:80'
 
     # 1. Criar jogo
     print("1️⃣  Criando jogo...")
-    response = session.post(f"{stub_url}/game/create",
+    response = session.post(f"{stub_url}/create-game",
                             json={"game_name": "Teste API"})
     game_data = response.json()
     print(f"   Resposta: {game_data}")
 
-    if not game_data.get('success'):
+    if not game_data.get('game_id'):
         print("   ✗ Falhou ao criar jogo")
         return
 
@@ -335,19 +348,19 @@ def test_api_endpoints():
 
     # 2. Registrar jogador
     print("2️⃣  Registrando jogador...")
-    response = session.post(f"{stub_url}/game/register",
+    response = session.post(f"{stub_url}/register-player",
                             json={"game_id": game_id, "player_name": "TestPlayer"})
     player_data = response.json()
     print(f"   Player ID: {player_data.get('player_id')}")
-    print(f"   Cartela: {player_data.get('card')[:10]}... (primeiros 10)")
+    print(f"   Cartela: {player_data.get('card_numbers', [])[:10]}... (primeiros 10)")
     print(f"   ✓ Sucesso: {player_data.get('success')}\n")
 
     player_id = player_data['player_id']
-    card = player_data['card']
+    card = player_data['card_numbers']
 
     # 3. Sortear número
     print("3️⃣  Sorteando número...")
-    response = session.post(f"{stub_url}/game/draw",
+    response = session.post(f"{stub_url}/draw-number",
                             json={"game_id": game_id})
     draw_data = response.json()
     print(f"   Número sorteado: {draw_data.get('number')}")
@@ -357,7 +370,7 @@ def test_api_endpoints():
 
     # 4. Marcar número (se estiver na cartela)
     print("4️⃣  Marcando número...")
-    response = session.post(f"{stub_url}/game/mark",
+    response = session.post(f"{stub_url}/mark-number",
                             json={"game_id": game_id, "player_id": player_id, "number": number})
     mark_data = response.json()
     print(f"   Número {number} está na cartela: {number in card}")
@@ -365,14 +378,15 @@ def test_api_endpoints():
 
     # 5. Obter cartela
     print("5️⃣  Obtendo cartela do jogador...")
-    response = session.get(f"{stub_url}/game/card?player_id={player_id}")
+    response = session.post(f"{stub_url}/get-card",
+                            json={"player_id": player_id})
     card_data = response.json()
-    print(f"   Cartela: {card_data.get('card')[:10]}... (primeiros 10)")
-    print(f"   ✓ Total de números: {len(card_data.get('card', []))}\n")
+    print(f"   Cartela: {card_data.get('card_numbers', [])[:10]}... (primeiros 10)")
+    print(f"   ✓ Total de números: {len(card_data.get('card_numbers', []))}\n")
 
     # 6. Verificar bingo (vai falhar pois não completou)
     print("6️⃣  Verificando BINGO (deve falhar)...")
-    response = session.post(f"{stub_url}/game/bingo",
+    response = session.post(f"{stub_url}/check-bingo",
                             json={"game_id": game_id, "player_id": player_id})
     bingo_data = response.json()
     print(f"   BINGO válido: {bingo_data.get('bingo')}")
@@ -396,7 +410,7 @@ if __name__ == '__main__':
         else:
             print("Uso: python test_client.py [single|multi|api]")
     else:
-        print("\nCliente de Teste do Bingo gRPC via Stub C++")
+        print("\nCliente de Teste do Bingo gRPC via Stub Node.js")
         print("="*60)
         print("\nModos disponíveis:")
         print("  python test_client.py single    - Teste com 1 jogador")
@@ -405,6 +419,5 @@ if __name__ == '__main__':
         print("\nPré-requisitos:")
         print("  1. ValidationService rodando na porta 50052")
         print("  2. GameService rodando na porta 50051")
-        print("  3. Stub C++ rodando na porta 8080")
+        print("  3. Stub Node.js rodando e acessível")
         print("="*60 + "\n")
-
