@@ -1,25 +1,9 @@
-# FastAPI REST/JSON version of the gRPC ValidationService
-# ------------------------------------------------------
-# This mirrors the RPCs: RegisterCard, ValidateNumber, ValidateBingo, GetCard
-# and exposes them as simple JSON endpoints expected by the REST GameService.
-#
-# Endpoints:
-#   POST /register-card     -> {"player_id": str, "card_numbers": [int]} -> {"success": bool}
-#   POST /validate-number   -> {"player_id": str, "number": int}        -> {"success": bool}
-#   POST /validate-bingo    -> {"player_id": str, "numbers": [int]}      -> {"bingo": bool}
-#   GET  /card/{player_id}  ->                                              -> {"card_numbers": [int]}
-#
-# --- How to run ---
-# 1) pip install fastapi uvicorn
-# 2) uvicorn validation_service_rest:app --host 0.0.0.0 --port 50052 --reload
-
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
 from typing import Dict, List, Set
 
 app = FastAPI(title="Validation Service (REST)")
 
-# In-memory storage: player_id -> {"card": List[int], "marked": Set[int]}
 players: Dict[str, Dict[str, object]] = {}
 
 # -----------------------------
@@ -69,7 +53,6 @@ def validate_number(payload: ValidateNumberRequest):
     if p:
         card: List[int] = p["card"]  # type: ignore
         if payload.number in card:
-            # ensure we have a set for marked
             if not isinstance(p["marked"], set):
                 p["marked"] = set(p["marked"])  # type: ignore
             marked: Set[int] = p["marked"]  # type: ignore
@@ -83,11 +66,9 @@ def validate_bingo(payload: ValidateBingoRequest):
     if p:
         card_set = set(p["card"])  # type: ignore
         marked_set = set(p["marked"])  # type: ignore
-        # Mark any drawn numbers that are on the card (idempotent)
         for n in payload.numbers:
             if n in card_set:
                 marked_set.add(n)
-        # Persist back (in case marked_set was copied)
         p["marked"] = marked_set
         if card_set.issubset(marked_set):
             return ValidateBingoResponse(bingo=True)

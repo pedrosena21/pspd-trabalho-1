@@ -1,44 +1,3 @@
-# FastAPI REST/JSON version of the gRPC GameService you shared
-# -----------------------------------------------------------
-# This exposes JSON endpoints that mirror the CreateGame, RegisterPlayer,
-# DrawNumber, MarkNumber, and CheckBingo RPCs.
-#
-# It also demonstrates calling a *REST* ValidationService running at
-# http://localhost:50052 with the following assumed endpoints:
-#   POST /register-card {"player_id": str, "card_numbers": [int]}
-#   POST /validate-number {"player_id": str, "number": int} -> {"success": bool}
-#   POST /validate-bingo {"player_id": str, "numbers": [int]} -> {"bingo": bool}
-# If your ValidationService is still gRPC-only, see the GRPCClient stub at the
-# bottom for how to swap to gRPC calls instead.
-#
-# --- How to run ---
-# 1) pip install fastapi uvicorn httpx
-# 2) uvicorn game_service_rest:app --host 0.0.0.0 --port 50051 --reload
-#
-# --- Example requests ---
-# Create a game:
-# curl -s -X POST http://localhost:50051/games -H 'Content-Type: application/json' \
-#   -d '{"game_name":"Noite do Bingo"}'
-# -> {"game_id":"..."}
-#
-# Register a player:
-# curl -s -X POST http://localhost:50051/games/<game_id>/players -H 'Content-Type: application/json' \
-#   -d '{"player_name":"Ana"}'
-# -> {"player_id":"...","card_numbers":[...],"success":true}
-#
-# Draw a number:
-# curl -s -X POST http://localhost:50051/games/<game_id>/draw
-# -> {"number":42,"success":true}
-#
-# Mark a number:
-# curl -s -X POST http://localhost:50051/players/<player_id>/mark -H 'Content-Type: application/json' \
-#   -d '{"number":42}'
-# -> {"success":true}
-#
-# Check bingo:
-# curl -s "http://localhost:50051/games/<game_id>/bingo?player_id=<player_id>"
-# -> {"bingo":false}
-
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 from typing import Dict, List, Optional, Tuple
@@ -115,15 +74,10 @@ class ValidationRESTClient:
 
 app = FastAPI(title="Game Service (REST)")
 
-# In-memory state (like your gRPC server)
 games: Dict[str, Game] = {}
-# Optional reverse index to find which game a player is in
 player_to_game: Dict[str, str] = {}
 
-# Choose which Validation client to use
 validation_client = ValidationRESTClient(base_url="http://localhost:50052")
-# To use gRPC instead, uncomment below and comment out the REST client above:
-# validation_client = ValidationGRPCClient()
 
 class CreateGameRequest(BaseModel):
     game_name: str = Field(..., description="Nome do jogo")
@@ -197,7 +151,6 @@ def draw_number(game_id: str):
 
 @app.post("/players/{player_id}/mark", response_model=MarkNumberResponse)
 def mark_number(player_id: str, payload: MarkNumberRequest):
-    # Validate via ValidationService
     ok = validation_client.validate_number(player_id=player_id, number=payload.number)
     if ok:
         print(f"[GAME SERVICE] Número {payload.number} marcado para {player_id}")

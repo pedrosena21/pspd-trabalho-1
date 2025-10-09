@@ -1,17 +1,3 @@
-// Express API Gateway that talks to REST FastAPI backends (no gRPC)
-// -----------------------------------------------------------------
-// Replaces @grpc/* stubs with HTTP calls to the REST GameService and
-// ValidationService you already have running in Python.
-//
-// ENV VARS (with sensible defaults):
-//   GAME_BASE=http://game-server-service:50051
-//   VALIDATION_BASE=http://validation-server-service:50052
-//   PORT=8080
-//
-// Run:
-//   npm i express cors swagger-ui-express swagger-jsdoc axios
-//   node server.rest.js
-
 const express = require('express');
 const path = require('path');
 const swaggerUi = require('swagger-ui-express');
@@ -58,7 +44,6 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Small helper for forwarding
 async function forward(method, url, payload, res) {
   try {
     const r = await axios({ method, url, data: payload, validateStatus: () => true });
@@ -320,7 +305,6 @@ app.post('/register-card', async (req, res) => {
   return forward('post', `${VALIDATION_BASE}/register-card`, { player_id, card_numbers }, res);
 });
 
-// Health of gateway (and optional pass-through checks)
 app.get('/healthz', async (req, res) => {
   try {
     const [game, val] = await Promise.all([
