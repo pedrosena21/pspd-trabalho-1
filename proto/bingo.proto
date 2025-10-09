@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package bingo;
+
+service GameService {
+  rpc CreateGame (CreateGameRequest) returns (CreateGameResponse);
+  rpc RegisterPlayer (RegisterPlayerRequest) returns (RegisterPlayerResponse);
+  rpc DrawNumber (DrawNumberRequest) returns (DrawNumberResponse);
+  rpc MarkNumber (MarkNumberRequest) returns (MarkNumberResponse);
+  rpc CheckBingo (CheckBingoRequest) returns (CheckBingoResponse);
+}
+
+service ValidationService {
+  rpc ValidateNumber (ValidateNumberRequest) returns (ValidateNumberResponse);
+  rpc ValidateBingo (ValidateBingoRequest) returns (ValidateBingoResponse);
+  rpc GetCard (GetCardRequest) returns (GetCardResponse);
+
+  // 🔥 Novo RPC
+  rpc RegisterCard (RegisterCardRequest) returns (RegisterCardResponse);
+}
+
+// GameService
+message CreateGameRequest { string game_name = 1; }
+message CreateGameResponse { string game_id = 1; }
+
+message RegisterPlayerRequest { string game_id = 1; string player_name = 2; }
+message RegisterPlayerResponse {
+  string player_id = 1;
+  repeated int32 card_numbers = 2;
+  bool success = 3;
+}
+
+message DrawNumberRequest { string game_id = 1; }
+message DrawNumberResponse { int32 number = 1; bool success = 2; }
+
+message MarkNumberRequest { string game_id = 1; string player_id = 2; int32 number = 3; }
+message MarkNumberResponse { bool success = 1; }
+
+message CheckBingoRequest { string game_id = 1; string player_id = 2; }
+message CheckBingoResponse { bool bingo = 1; }
+
+// ValidationService
+message ValidateNumberRequest { string player_id = 1; int32 number = 2; }
+message ValidateNumberResponse { bool success = 1; }
+
+message ValidateBingoRequest { string player_id = 1; repeated int32 numbers = 2; }
+message ValidateBingoResponse { bool bingo = 1; }
+
+message GetCardRequest { string player_id = 1; }
+message GetCardResponse { repeated int32 card_numbers = 1; }
+
+// 🔥 Novos para registro
+message RegisterCardRequest {
+  string player_id = 1;
+  repeated int32 card_numbers = 2;
+}
+message RegisterCardResponse {
+  bool success = 1;
+}
+
