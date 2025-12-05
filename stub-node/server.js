@@ -5,6 +5,47 @@ const path = require('path');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
 const cors = require('cors');
+const client = require('prom-client');
+
+
+// Prometheus metrics
+const register = new client.Registry();
+client.collectDefaultMetrics({ register });
+
+// Custom metrics
+const httpRequestDuration = new client.Histogram({
+  name: 'http_request_duration_seconds',
+  help: 'Duration of HTTP requests in seconds',
+  labelNames: ['method', 'route', 'status_code'],
+  buckets: [0.1, 0.5, 1, 2, 5]
+});
+
+const httpRequestTotal = new client.Counter({
+  name: 'http_requests_total',
+  help: 'Total number of HTTP requests',
+  labelNames: ['method', 'route', 'status_code']
+});
+
+const gamesCreated = new client.Counter({
+  name: 'games_created_total',
+  help: 'Total number of games created'
+});
+
+const playersRegistered = new client.Counter({
+  name: 'players_registered_total',
+  help: 'Total number of players registered'
+});
+
+const numbersDrawn = new client.Counter({
+  name: 'numbers_drawn_total',
+  help: 'Total number of numbers drawn'
+});
+
+register.registerMetric(httpRequestDuration);
+register.registerMetric(httpRequestTotal);
+register.registerMetric(gamesCreated);
+register.registerMetric(playersRegistered);
+register.registerMetric(numbersDrawn);
 
 const swaggerDefinition = {
   openapi: '3.0.0',
@@ -52,7 +93,30 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
+
+// Middleware para métricas Prometheus
+app.use((req, res, next) => {
+  const start = Date.now();
+  res.on('finish', () => {
+    const duration = (Date.now() - start) / 1000;
+    const route = req.route ? req.route.path : req.path;
+    httpRequestDuration.observe({ method: req.method, route, status_code: res.statusCode }, duration);
+    httpRequestTotal.inc({ method: req.method, route, status_code: res.statusCode });
+  });
+  next();
+});
+
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// Endpoint de métricas Prometheus
+app.get('/metrics', async (req, res) => {
+  try {
+    res.set('Content-Type', register.contentType);
+    res.end(await register.metrics());
+  } catch (ex) {
+    res.status(500).end(ex);
+  }
+});
 
 // Health check
 app.get('/', (req, res) => {
@@ -88,6 +152,8 @@ app.post('/game/create', (req, res) => {
       console.error('Erro no gRPC CreateGame:', err);
       return res.status(500).json({ success: false, error: err.message });
     }
+    counter.add(1);
+    gamesCreated.inc();
     res.json({ success: true, game_id: response.game_id });
   });
 });
@@ -119,6 +185,7 @@ app.post('/game/register', (req, res) => {
       console.error('Erro no gRPC RegisterPlayer:', err);
       return res.status(500).json({ success: false, error: err.message });
     }
+    playersRegistered.inc();
     res.json({
       success: response.success,
       player_id: response.player_id,
@@ -152,6 +219,7 @@ app.post('/game/draw', (req, res) => {
       console.error('Erro no gRPC DrawNumber:', err);
       return res.status(500).json({ success: false, error: err.message });
     }
+    numbersDrawn.inc();
     res.json({
       success: response.success,
       number: response.number

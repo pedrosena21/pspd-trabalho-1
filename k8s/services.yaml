@@ -4,11 +4,14 @@ apiVersion: v1
 kind: Service
 metadata:
   name: stub-node-service
+  labels:
+    app: stub-node
 spec:
   selector:
     app: stub-node
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: 8080
       targetPort: 8080
   type: LoadBalancer

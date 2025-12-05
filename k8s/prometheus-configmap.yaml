@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+      external_labels:
+        cluster: 'minikube'
+        replica: '0'
+
+    scrape_configs:
+      - job_name: 'stub-node'
+        static_configs:
+          - targets: ['stub-node-service:8080']
+        metrics_path: '/metrics'
+        scheme: 'http'
+
+      - job_name: 'prometheus'
+        static_configs:
+          - targets: ['localhost:9090']
+
