@@ -23,9 +23,14 @@ spec:
   selector:
     app: game-server
   ports:
-    - protocol: TCP
+    - name: grpc
+      protocol: TCP
       port: 50051
       targetPort: 50051
+    - name: metrics
+      protocol: TCP
+      port: 8001
+      targetPort: 8001
   type: ClusterIP
 ---
 apiVersion: v1

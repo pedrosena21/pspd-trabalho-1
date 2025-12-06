@@ -18,7 +18,12 @@ data:
         metrics_path: '/metrics'
         scheme: 'http'
 
+      - job_name: 'game-service'
+        static_configs:
+          - targets: ['game-server-service:8001']
+        metrics_path: '/'
+        scheme: 'http'
+
       - job_name: 'prometheus'
         static_configs:
           - targets: ['localhost:9090']
-

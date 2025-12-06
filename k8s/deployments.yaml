@@ -37,10 +37,11 @@ spec:
     spec:
       containers:
         - name: game-server
-          image:  service-a-python
+          image: service-a-python
           imagePullPolicy: Never
           ports:
-            - containerPort: 50051
+            - containerPort: 50051 # gRPC
+            - containerPort: 8001  # Prometheus Metrics
 ---
 apiVersion: apps/v1
 kind: Deployment
