@@ -152,7 +152,6 @@ app.post('/game/create', (req, res) => {
       console.error('Erro no gRPC CreateGame:', err);
       return res.status(500).json({ success: false, error: err.message });
     }
-    counter.add(1);
     gamesCreated.inc();
     res.json({ success: true, game_id: response.game_id });
   });
