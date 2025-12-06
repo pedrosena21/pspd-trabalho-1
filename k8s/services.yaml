@@ -25,7 +25,8 @@ spec:
     - protocol: TCP
       port: 50051
       targetPort: 50051
-  type: ClusterIP
+      nodePort: 30051
+  type: LoadBalancer
 ---
 apiVersion: v1
 kind: Service
@@ -38,4 +39,5 @@ spec:
     - protocol: TCP
       port: 50052
       targetPort: 50052
-  type: ClusterIP
+      nodePort: 30052
+  type: LoadBalancer
