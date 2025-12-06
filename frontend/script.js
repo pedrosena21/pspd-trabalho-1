@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let GAME_ID = null;
     let PLAYER_ID = null;
     let ROUND_NUMBER = 0;
-    const API_BASE_URL = 'http://bingo-api';
+    const API_BASE_URL = 'http://bingo-api:30080';
 
     // Referências aos elementos do DOM
     const startGameBtn = document.getElementById('start-game-btn');
