@@ -17,7 +17,7 @@ spec:
       containers:
         - name: stub-node
           image: stub-node
-          imagePullPolicy: Never
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
 ---
@@ -38,7 +38,7 @@ spec:
       containers:
         - name: game-server
           image: service-a-python
-          imagePullPolicy: Never
+          imagePullPolicy: Always
           ports:
             - containerPort: 50051 # gRPC
             - containerPort: 8001  # Prometheus Metrics
@@ -60,6 +60,6 @@ spec:
       containers:
         - name: validation-server
           image: service-b-python
-          imagePullPolicy: Never
+          imagePullPolicy: Always
           ports:
             - containerPort: 50052
