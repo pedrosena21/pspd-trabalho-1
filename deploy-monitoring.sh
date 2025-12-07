@@ -21,7 +21,11 @@ kubectl apply -f k8s/prometheus-deployment.yaml
 echo "🔄 Atualizando configuração do Prometheus..."
 kubectl rollout restart deployment/prometheus-deployment || true
 
-# 4. Aplicar Deployment e Service do Grafana
+# 4. Aplicar o ConfigMap dos Dashboards (onde está o seu JSON)
+echo "👉 Atualizando Dashboards do Grafana..."
+kubectl apply -f k8s/grafana-dashboard-configmap.yaml
+
+# 5. Aplicar Deployment e Service do Grafana
 echo "👉 Deployando Grafana..."
 kubectl apply -f k8s/grafana-deployment.yaml
 
@@ -35,7 +39,10 @@ MINIKUBE_IP=$(minikube ip)
 
 echo ""
 echo "✅ Monitoramento atualizado!"
-echo "   Agora monitorando: stub-node (8080) e game-service (8001)"
+echo "   Agora monitorando:"
+echo "   - stub-node (8080)"
+echo "   - game-service (8001)"
+echo "   - validation-service (8002)"
 echo ""
 echo "📊 Acesse os serviços:"
 echo "   Prometheus: http://$MINIKUBE_IP:30090"
@@ -49,4 +56,3 @@ echo "📈 Para verificar o status:"
 echo "   kubectl get pods -l app=prometheus"
 echo "   kubectl get pods -l app=grafana"
 echo "   kubectl get svc prometheus-service grafana-service"
-

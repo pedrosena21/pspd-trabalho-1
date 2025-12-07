@@ -61,7 +61,7 @@ data:
           - source_labels: [__meta_kubernetes_pod_ip]
             regex: '(.+)'
             target_label: __address__
-            replacement: $1:50052
+            replacement: $1:8002
           - source_labels: [__meta_kubernetes_pod_name]
             target_label: pod
           - source_labels: [__meta_kubernetes_namespace]

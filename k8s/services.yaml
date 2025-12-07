@@ -41,7 +41,12 @@ spec:
   selector:
     app: validation-server
   ports:
-    - protocol: TCP
+    - name: grpc
+      protocol: TCP
       port: 50052
       targetPort: 50052
+    - name: metrics
+      protocol: TCP
+      port: 8002
+      targetPort: 8002
   type: ClusterIP

@@ -63,3 +63,4 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 50052
+            - containerPort: 8002
