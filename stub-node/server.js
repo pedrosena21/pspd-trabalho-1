@@ -31,6 +31,11 @@ const gamesCreated = new client.Counter({
   help: 'Total number of games created'
 });
 
+const bingoChecks = new client.Counter({
+  name: 'bingo_checks_total',
+  help: 'Total number of bingo checks performed'
+});
+
 const playersRegistered = new client.Counter({
   name: 'players_registered_total',
   help: 'Total number of players registered'
@@ -286,6 +291,7 @@ app.post('/game/bingo', (req, res) => {
       console.error('Erro no gRPC CheckBingo:', err);
       return res.status(500).json({ bingo: false, error: err.message });
     }
+    bingoChecks.inc();
     res.json({ bingo: response.bingo });
   });
 });
