@@ -230,24 +230,80 @@ data:
       "id": null,
       "links": [],
       "panels": [
-        { "type": "stat", "title": "Validation requests (total)", "gridPos": { "h": 3, "w": 4, "x": 0, "y": 0 }, "id": 1, "datasource": "Prometheus", "targets": [ { "expr": "sum(validation_requests_total{job=\"kubernetes-pods-validation-server\"}) or sum(validation_request_total{job=\"kubernetes-pods-validation-server\"})", "refId": "A" } ], "options": { "reduceOptions": { "calcs": ["lastNotNull"] } } },
-        { "type": "stat", "title": "Validations success (total)", "gridPos": { "h": 3, "w": 4, "x": 4, "y": 0 }, "id": 2, "datasource": "Prometheus", "targets": [ { "expr": "sum(validation_success_total{job=\"kubernetes-pods-validation-server\"}) or sum(validation_success{job=\"kubernetes-pods-validation-server\"})", "refId": "A" } ], "options": { "reduceOptions": { "calcs": ["lastNotNull"] } } },
-        { "type": "timeseries", "title": "Validation rate (1m)", "gridPos": { "h": 5, "w": 12, "x": 0, "y": 3 }, "id": 3, "datasource": "Prometheus", "targets": [ { "expr": "rate(validation_requests_total{job=\"kubernetes-pods-validation-server\"}[1m])", "legendFormat": "validation_rps", "refId": "A" }, { "expr": "rate(validation_success_total{job=\"kubernetes-pods-validation-server\"}[1m])", "legendFormat": "success_rps", "refId": "B" } ], "fieldConfig": { "defaults": { "unit": "req/s" } } },
-        { "type": "timeseries", "title": "Validation Latência p50/p95", "gridPos": { "h": 6, "w": 12, "x": 12, "y": 3 }, "id": 4, "datasource": "Prometheus", "targets": [ { "expr": "histogram_quantile(0.95, sum(rate(validation_request_duration_seconds_bucket{job=\"kubernetes-pods-validation-server\"}[5m])) by (le, pod, method))", "legendFormat": "{{pod}} p95 {{method}}", "refId": "A" }, { "expr": "histogram_quantile(0.50, sum(rate(validation_request_duration_seconds_bucket{job=\"kubernetes-pods-validation-server\"}[5m])) by (le, pod, method))", "legendFormat": "{{pod}} p50 {{method}}", "refId": "B" } ], "fieldConfig": { "defaults": { "unit": "s" } } },
-        { "type": "timeseries", "title": "Erro interno (5xx) - taxa (1m)", "gridPos": { "h": 4, "w": 12, "x": 0, "y": 9 }, "id": 5, "datasource": "Prometheus", "targets": [ { "expr": "sum by (pod, status) (rate(validation_requests_total{job=\"kubernetes-pods-validation-server\",status=~\"5..\"}[1m]))", "legendFormat": "{{pod}} {{status}}", "refId": "A" } ], "fieldConfig": { "defaults": { "unit": "req/s" } } },
-        { "type": "timeseries", "title": "CPU total (cores) - validation service pods", "gridPos": { "h": 4, "w": 6, "x": 0, "y": 13 }, "id": 6, "datasource": "Prometheus", "targets": [ { "expr": "sum(rate(container_cpu_usage_seconds_total{job=\"kubernetes-pods-validation-server\",pod=~\"(?i:validation|service-b).*\"}[5m]))", "legendFormat": "cpu_total", "refId": "A" } ], "fieldConfig": { "defaults": { "unit": "cores" } } },
-        { "type": "timeseries", "title": "Memória total (MB) - validation pods", "gridPos": { "h": 4, "w": 6, "x": 6, "y": 13 }, "id": 7, "datasource": "Prometheus", "targets": [ { "expr": "sum(container_memory_working_set_bytes{job=\"kubernetes-pods-validation-server\",pod=~\"(?i:validation|service-b).*\"})", "legendFormat": "mem_total", "refId": "A" } ], "fieldConfig": { "defaults": { "unit": "bytes" } } },
-        { "type": "stat", "title": "Pods UP (validation)", "gridPos": { "h": 3, "w": 4, "x": 12, "y": 13 }, "id": 8, "datasource": "Prometheus", "targets": [ { "expr": "count(up{job=\"kubernetes-pods-validation-server\"} == 1)", "refId": "A" } ] },
-        { "type": "table", "title": "Top métodos validation por chamadas (1m)", "gridPos": { "h": 6, "w": 12, "x": 0, "y": 17 }, "id": 9, "datasource": "Prometheus", "targets": [ { "expr": "topk(10, sum by (method) (rate(validation_request_duration_seconds_count{job=\"kubernetes-pods-validation-server\"}[1m])))", "legendFormat": "{{method}}", "refId": "A" } ] }
+        { 
+          "type": "stat", 
+          "title": "Total Números Verificados", 
+          "gridPos": { "h": 3, "w": 4, "x": 0, "y": 0 }, 
+          "id": 1, 
+          "datasource": "Prometheus", 
+          "targets": [ { "expr": "sum(validation_numbers_checked_total{job=\"kubernetes-pods-validation-server\"})", "refId": "A" } ], 
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] } } 
+        },
+        { 
+          "type": "stat", 
+          "title": "Cartelas Registradas", 
+          "gridPos": { "h": 3, "w": 4, "x": 4, "y": 0 }, 
+          "id": 2, 
+          "datasource": "Prometheus", 
+          "targets": [ { "expr": "sum(validation_cards_registered_total{job=\"kubernetes-pods-validation-server\"})", "refId": "A" } ], 
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] } } 
+        },
+        { 
+          "type": "stat", 
+          "title": "Bingos Validados (Vencedores)", 
+          "gridPos": { "h": 3, "w": 4, "x": 8, "y": 0 }, 
+          "id": 10, 
+          "datasource": "Prometheus", 
+          "targets": [ { "expr": "sum(validation_bingo_checked_total{job=\"kubernetes-pods-validation-server\", result=\"winner\"})", "refId": "A" } ], 
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] } } 
+        },
+        { 
+          "type": "timeseries", 
+          "title": "Validações por Segundo (Válidos vs Inválidos)", 
+          "gridPos": { "h": 6, "w": 12, "x": 0, "y": 3 }, 
+          "id": 3, 
+          "datasource": "Prometheus", 
+          "targets": [ 
+            { "expr": "rate(validation_numbers_checked_total{job=\"kubernetes-pods-validation-server\", result=\"valid\"}[1m])", "legendFormat": "num_validos", "refId": "A" }, 
+            { "expr": "rate(validation_numbers_checked_total{job=\"kubernetes-pods-validation-server\", result=\"invalid\"}[1m])", "legendFormat": "num_invalidos", "refId": "B" } 
+          ], 
+          "fieldConfig": { "defaults": { "unit": "req/s" } } 
+        },
+        { 
+          "type": "timeseries", 
+          "title": "Latência de Validação (p95)", 
+          "gridPos": { "h": 6, "w": 12, "x": 12, "y": 3 }, 
+          "id": 4, 
+          "datasource": "Prometheus", 
+          "targets": [ { "expr": "histogram_quantile(0.95, sum(rate(validation_grpc_request_duration_seconds_bucket{job=\"kubernetes-pods-validation-server\"}[5m])) by (le, method))", "legendFormat": "{{method}} p95", "refId": "A" } ], 
+          "fieldConfig": { "defaults": { "unit": "s" } } 
+        },
+        { 
+          "type": "timeseries", 
+          "title": "CPU Usage", 
+          "gridPos": { "h": 4, "w": 12, "x": 0, "y": 9 }, 
+          "id": 6, 
+          "datasource": "Prometheus", 
+          "targets": [ { "expr": "sum(rate(container_cpu_usage_seconds_total{job=\"kubernetes-pods-validation-server\",pod=~\"(?i:validation|service-b).*\"}[5m]))", "legendFormat": "cpu_total", "refId": "A" } ], 
+          "fieldConfig": { "defaults": { "unit": "cores" } } 
+        },
+        { 
+          "type": "table", 
+          "title": "Top Métodos gRPC (Requisições)", 
+          "gridPos": { "h": 6, "w": 12, "x": 0, "y": 13 }, 
+          "id": 9, 
+          "datasource": "Prometheus", 
+          "targets": [ { "expr": "topk(10, sum by (method) (rate(validation_grpc_request_duration_seconds_count{job=\"kubernetes-pods-validation-server\"}[1m])))", "legendFormat": "{{method}}", "refId": "A" } ] 
+        }
       ],
       "refresh": "5s",
       "schemaVersion": 31,
       "style": "dark",
-      "tags": ["validation-service","performance","load-test"],
+      "tags": ["validation-service","monitoramento","entregue"],
       "templating": { "list": [ { "name": "datasource", "type": "datasource", "pluginId": "prometheus", "query": "prometheus", "current": { "text": "Prometheus", "value": "Prometheus" } } ] },
       "time": { "from": "now-15m", "to": "now" },
       "timepicker": {},
-      "title": "Validation Service — Load Test Dashboard",
+      "title": "Validation Service — Dashboard Final",
       "uid": null,
       "version": 1
     }
