@@ -1,14 +1,14 @@
-FROM python:3.11-slim
+FROM python:3.9-slim
 
 WORKDIR /app
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY game_service.py .
-COPY bingo_pb2.py .
-COPY bingo_pb2_grpc.py .
+COPY . .
 
-EXPOSE 50051
+# 50051 = gRPC Server
+# 8001  = Prometheus Metrics
+EXPOSE 50051 8001
 
 CMD ["python", "game_service.py"]

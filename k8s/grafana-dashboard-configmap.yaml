@@ -1,0 +1,1128 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-stubnode
+  labels:
+    grafana_dashboard: "1"
+data:
+  stubnode.json: |
+    {
+      "annotations": {
+        "list": [
+          {
+            "builtIn": 1,
+            "datasource": "-- Grafana --",
+            "enable": true,
+            "hide": true,
+            "iconColor": "rgba(0, 211, 255, 1)",
+            "name": "Annotations & Alerts",
+            "type": "dashboard"
+            }
+          ]
+        },
+      "editable": true,
+      "gnetId": null,
+      "graphTooltip": 0,
+      "id": null,
+      "links": [],
+      "panels": [
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "expr": "sum(games_created_total{job=\"kubernetes-pods-stub-node\"})",
+          "refId": "A"
+        }
+      ],
+      "title": "Games criados (total)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 4,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "sum(players_registered_total{job=\"kubernetes-pods-stub-node\"})",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Jogadores registrados (total)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 8,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "expr": "sum(numbers_drawn_total{job=\"kubernetes-pods-stub-node\"})",
+          "refId": "A"
+        }
+      ],
+      "title": "Números sorteados (total)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 12,
+        "y": 0
+      },
+      "id": 8,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "sum(bingo_checks_total{job=\"kubernetes-pods-stub-node\"})",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Bingo checks",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "req/s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 3
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "expr": "sum by (route) (rate(http_requests_total{job=\"kubernetes-pods-stub-node\", route=~\"/game/.*\"}[1m]))",
+          "legendFormat": "{{route}}",
+          "refId": "A"
+        }
+      ],
+      "title": "HTTP Req/s por rota",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "req/s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 12,
+        "x": 12,
+        "y": 3
+      },
+      "id": 7,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "expr": "sum by (status_code) (rate(http_requests_total{job=\"kubernetes-pods-stub-node\",status_code=~\"4..|5..\"}[1m]))",
+          "legendFormat": "{{status_code}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Erros HTTP (4xx / 5xx) - taxa (1m)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 7
+      },
+      "id": 10,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "expr": "topk(10, sum by (route) (rate(http_requests_total{job=\"kubernetes-pods-stub-node\", route=~\"/game/.*\"}[1m])))",
+          "legendFormat": "{{route}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Top rotas por requisições (1m)",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 9
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "expr": "histogram_quantile(0.95, sum(rate(grpc_request_duration_seconds_bucket{job=\"kubernetes-pods-stub-node\"}[5m])) by (le, method))",
+          "legendFormat": "p95 {{method}}",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "expr": "histogram_quantile(0.50, sum(rate(grpc_request_duration_seconds_bucket{job=\"kubernetes-pods-stub-node\"}[5m])) by (le, method))",
+          "legendFormat": "p50 {{method}}",
+          "refId": "B"
+        }
+      ],
+      "title": "gRPC Latência (p50 / p95) por método",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 13
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\"kubernetes-pods-stub-node\"}[5m])) by (le))",
+          "legendFormat": "p95",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "expr": "histogram_quantile(0.50, sum(rate(http_request_duration_seconds_bucket{job=\"kubernetes-pods-stub-node\"}[5m])) by (le))",
+          "legendFormat": "p50",
+          "refId": "B"
+        }
+      ],
+      "title": "HTTP Latência (p50 / p95)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "req/s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 15
+      },
+      "id": 9,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "expr": "rate(games_created_total{job=\"kubernetes-pods-stub-node\"}[1m])",
+          "legendFormat": "games_created",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "expr": "rate(players_registered_total{job=\"kubernetes-pods-stub-node\"}[1m])",
+          "legendFormat": "players_registered",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "expr": "rate(numbers_drawn_total{job=\"kubernetes-pods-stub-node\"}[1m])",
+          "legendFormat": "numbers_drawn",
+          "refId": "C"
+        }
+      ],
+      "title": "Rates de eventos de negócio (1m)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "req/s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 21
+      },
+      "id": 13,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "expr": "sum by (pod) (rate(http_requests_total{job=\"kubernetes-pods-stub-node\"}[1m]))",
+          "legendFormat": "{{pod}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Req/s por Pod",
+      "type": "timeseries"
+    }
+      ],
+      "refresh": "5s",
+      "schemaVersion": 31,
+      "style": "dark",
+      "tags": ["stub-node", "performance", "load-test"],
+      "templating": {
+        "list": [
+          {
+            "name": "datasource",
+            "type": "datasource",
+            "pluginId": "prometheus",
+            "query": "prometheus",
+            "current": { "text": "Prometheus", "value": "Prometheus" }
+          }
+        ]
+      },
+      "time": { "from": "now-15m", "to": "now" },
+      "timepicker": {},
+      "title": "Bingo — Load Test Dashboard",
+      "uid": null,
+      "version": 1
+    }
+  game_service.json: |
+    {
+      "annotations": { "list": [ { "builtIn": 1, "datasource": "-- Grafana --", "enable": true, "hide": true, "iconColor": "rgba(0, 211, 255, 1)", "name": "Annotations & Alerts", "type": "dashboard" } ] },
+      "editable": true,
+      "gnetId": null,
+      "graphTooltip": 0,
+      "id": null,
+      "links": [],
+      "panels": [
+        { "type": "stat", "title": "Games criados (total)", "gridPos": { "h": 3, "w": 4, "x": 0, "y": 0 }, "id": 1, "datasource": "Prometheus", "targets": [ { "expr": "sum(games_created_total{job=\"kubernetes-pods-game-server\"})", "refId": "A" } ], "options": { "reduceOptions": { "calcs": ["lastNotNull"] } } },
+        { "type": "stat", "title": "Jogadores registrados (total)", "gridPos": { "h": 3, "w": 4, "x": 4, "y": 0 }, "id": 2, "datasource": "Prometheus", "targets": [ { "expr": "sum(players_registered_total{job=\"kubernetes-pods-game-server\"})", "refId": "A" } ], "options": { "reduceOptions": { "calcs": ["lastNotNull"] } } },
+        { "type": "stat", "title": "Números sorteados (total)", "gridPos": { "h": 3, "w": 4, "x": 8, "y": 0 }, "id": 3, "datasource": "Prometheus", "targets": [ { "expr": "sum(numbers_drawn_total{job=\"kubernetes-pods-game-server\"})", "refId": "A" } ], "options": { "reduceOptions": { "calcs": ["lastNotNull"] } } },
+        { "type": "timeseries", "title": "Eventos de negócio - rates (1m)", "gridPos": { "h": 6, "w": 12, "x": 0, "y": 3 }, "id": 4, "datasource": "Prometheus", "targets": [ { "expr": "sum by (pod) (rate(games_created_total{job=\"kubernetes-pods-game-server\"}[1m]))", "legendFormat": "{{pod}} games_created", "refId": "A" }, { "expr": "sum by (pod) (rate(players_registered_total{job=\"kubernetes-pods-game-server\"}[1m]))", "legendFormat": "{{pod}} players_registered", "refId": "B" }, { "expr": "sum by (pod) (rate(numbers_drawn_total{job=\"kubernetes-pods-game-server\"}[1m]))", "legendFormat": "{{pod}} numbers_drawn", "refId": "C" } ], "fieldConfig": { "defaults": { "unit": "req/s" } } },
+        { "type": "timeseries", "title": "gRPC Latência (game service) p50/p95", "gridPos": { "h": 6, "w": 12, "x": 12, "y": 3 }, "id": 5, "datasource": "Prometheus", "targets": [ { "expr": "histogram_quantile(0.95, sum(rate(grpc_request_duration_seconds_bucket{job=\"kubernetes-pods-game-server\"}[5m])) by (le, pod, method))", "legendFormat": "{{pod}} p95 {{method}}", "refId": "A" }, { "expr": "histogram_quantile(0.50, sum(rate(grpc_request_duration_seconds_bucket{job=\"kubernetes-pods-game-server\"}[5m])) by (le, pod, method))", "legendFormat": "{{pod}} p50 {{method}}", "refId": "B" } ], "fieldConfig": { "defaults": { "unit": "s" } } },
+        { "type": "timeseries", "title": "HTTP Latência (game service) p50/p95", "gridPos": { "h": 4, "w": 12, "x": 0, "y": 9 }, "id": 6, "datasource": "Prometheus", "targets": [ { "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\"kubernetes-pods-game-server\"}[5m])) by (le, pod, route))", "legendFormat": "{{pod}} p95 {{route}}", "refId": "A" }, { "expr": "histogram_quantile(0.50, sum(rate(http_request_duration_seconds_bucket{job=\"kubernetes-pods-game-server\"}[5m])) by (le, pod, route))", "legendFormat": "{{pod}} p50 {{route}}", "refId": "B" } ], "fieldConfig": { "defaults": { "unit": "s" } } },
+        { "type": "timeseries", "title": "Erro 4xx/5xx - taxa (1m)", "gridPos": { "h": 4, "w": 12, "x": 12, "y": 9 }, "id": 7, "datasource": "Prometheus", "targets": [ { "expr": "sum by (pod, status_code) (rate(http_requests_total{job=\"kubernetes-pods-game-server\",status_code=~\"4..|5..\"}[1m]))", "legendFormat": "{{pod}} {{status_code}}", "refId": "A" } ], "fieldConfig": { "defaults": { "unit": "req/s" } } },
+        { "type": "timeseries", "title": "CPU total (cores) - game service pods", "gridPos": { "h": 4, "w": 6, "x": 0, "y": 13 }, "id": 8, "datasource": "Prometheus", "targets": [ { "expr": "sum(rate(container_cpu_usage_seconds_total{job=\"kubernetes-pods-game-server\",pod=~\"(?i:game|service-a).*\"}[5m]))", "legendFormat": "cpu_total", "refId": "A" } ], "fieldConfig": { "defaults": { "unit": "cores" } } },
+        { "type": "timeseries", "title": "Memória total (MB) - game service pods", "gridPos": { "h": 4, "w": 6, "x": 6, "y": 13 }, "id": 9, "datasource": "Prometheus", "targets": [ { "expr": "sum(container_memory_working_set_bytes{job=\"kubernetes-pods-game-server\",pod=~\"(?i:game|service-a).*\"})", "legendFormat": "mem_total", "refId": "A" } ], "fieldConfig": { "defaults": { "unit": "bytes" } } },
+        { "type": "stat", "title": "Pods UP (game service)", "gridPos": { "h": 3, "w": 4, "x": 12, "y": 13 }, "id": 10, "datasource": "Prometheus", "targets": [ { "expr": "count(up{job=\"kubernetes-pods-game-server\"} == 1)", "refId": "A" } ] },
+        { "type": "table", "title": "Top métodos gRPC por chamadas (1m)", "gridPos": { "h": 6, "w": 12, "x": 0, "y": 17 }, "id": 11, "datasource": "Prometheus", "targets": [ { "expr": "topk(10, sum by (method) (rate(grpc_request_duration_seconds_count{job=\"kubernetes-pods-game-server\"}[1m])))", "legendFormat": "{{method}}", "refId": "A" } ] },
+        { "type": "timeseries", "title": "CPU por Pod (cores) - game service", "gridPos": { "h": 6, "w": 8, "x": 0, "y": 23 }, "id": 12, "datasource": "Prometheus", "targets": [ { "expr": "sum by (pod) (rate(container_cpu_usage_seconds_total{job=\"kubernetes-pods-game-server\"}[5m]))", "legendFormat": "{{pod}}", "refId": "A" } ], "fieldConfig": { "defaults": { "unit": "cores" } } },
+        { "type": "timeseries", "title": "Memória por Pod (MB) - game service", "gridPos": { "h": 6, "w": 8, "x": 8, "y": 23 }, "id": 13, "datasource": "Prometheus", "targets": [ { "expr": "sum by (pod) (container_memory_working_set_bytes{job=\"kubernetes-pods-game-server\"})", "legendFormat": "{{pod}}", "refId": "A" } ], "fieldConfig": { "defaults": { "unit": "bytes" } } },
+        { "type": "timeseries", "title": "Req/s por Pod - game service", "gridPos": { "h": 6, "w": 12, "x": 0, "y": 29 }, "id": 14, "datasource": "Prometheus", "targets": [ { "expr": "sum by (pod) (rate(http_requests_total{job=\"kubernetes-pods-game-server\"}[1m]))", "legendFormat": "{{pod}}", "refId": "A" } ], "fieldConfig": { "defaults": { "unit": "req/s" } } }
+      ],
+      "refresh": "5s",
+      "schemaVersion": 31,
+      "style": "dark",
+      "tags": ["game-service","performance","load-test"],
+      "templating": { "list": [ { "name": "datasource", "type": "datasource", "pluginId": "prometheus", "query": "prometheus", "current": { "text": "Prometheus", "value": "Prometheus" } } ] },
+      "time": { "from": "now-15m", "to": "now" },
+      "timepicker": {},
+      "title": "Game Service — Load Test Dashboard",
+      "uid": null,
+      "version": 1
+    }
+  validation_service.json: |
+    {
+      "annotations": { "list": [ { "builtIn": 1, "datasource": "-- Grafana --", "enable": true, "hide": true, "iconColor": "rgba(0, 211, 255, 1)", "name": "Annotations & Alerts", "type": "dashboard" } ] },
+      "editable": true,
+      "gnetId": null,
+      "graphTooltip": 0,
+      "id": null,
+      "links": [],
+      "panels": [
+        { 
+          "type": "stat", 
+          "title": "Total Números Verificados", 
+          "gridPos": { "h": 3, "w": 4, "x": 0, "y": 0 }, 
+          "id": 1, 
+          "datasource": "Prometheus", 
+          "targets": [ { "expr": "sum(validation_numbers_checked_total{job=\"kubernetes-pods-validation-server\"})", "refId": "A" } ], 
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] } } 
+        },
+        { 
+          "type": "stat", 
+          "title": "Cartelas Registradas", 
+          "gridPos": { "h": 3, "w": 4, "x": 4, "y": 0 }, 
+          "id": 2, 
+          "datasource": "Prometheus", 
+          "targets": [ { "expr": "sum(validation_cards_registered_total{job=\"kubernetes-pods-validation-server\"})", "refId": "A" } ], 
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] } } 
+        },
+        { 
+          "type": "stat", 
+          "title": "Bingos Validados (Vencedores)", 
+          "gridPos": { "h": 3, "w": 4, "x": 8, "y": 0 }, 
+          "id": 10, 
+          "datasource": "Prometheus", 
+          "targets": [ { "expr": "sum(validation_bingo_checked_total{job=\"kubernetes-pods-validation-server\", result=\"winner\"})", "refId": "A" } ], 
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] } } 
+        },
+        { 
+          "type": "timeseries", 
+          "title": "Validações por Segundo (Válidos vs Inválidos)", 
+          "gridPos": { "h": 6, "w": 12, "x": 0, "y": 3 }, 
+          "id": 3, 
+          "datasource": "Prometheus", 
+          "targets": [ 
+            { "expr": "rate(validation_numbers_checked_total{job=\"kubernetes-pods-validation-server\", result=\"valid\"}[1m])", "legendFormat": "num_validos", "refId": "A" }, 
+            { "expr": "rate(validation_numbers_checked_total{job=\"kubernetes-pods-validation-server\", result=\"invalid\"}[1m])", "legendFormat": "num_invalidos", "refId": "B" } 
+          ], 
+          "fieldConfig": { "defaults": { "unit": "req/s" } } 
+        },
+        { 
+          "type": "timeseries", 
+          "title": "Latência de Validação (p95)", 
+          "gridPos": { "h": 6, "w": 12, "x": 12, "y": 3 }, 
+          "id": 4, 
+          "datasource": "Prometheus", 
+          "targets": [ { "expr": "histogram_quantile(0.95, sum(rate(validation_grpc_request_duration_seconds_bucket{job=\"kubernetes-pods-validation-server\"}[5m])) by (le, method))", "legendFormat": "{{method}} p95", "refId": "A" } ], 
+          "fieldConfig": { "defaults": { "unit": "s" } } 
+        },
+        { 
+          "type": "timeseries", 
+          "title": "CPU total (cores) - validation service pods", 
+          "gridPos": { "h": 4, "w": 12, "x": 0, "y": 9 }, 
+          "id": 6, 
+          "datasource": "Prometheus", 
+          "targets": [ { "expr": "sum(rate(container_cpu_usage_seconds_total{job=\"kubernetes-pods-validation-server\",pod=~\"(?i:validation|service-b).*\"}[5m]))", "legendFormat": "cpu_total", "refId": "A" } ], 
+          "fieldConfig": { "defaults": { "unit": "cores" } } 
+        },
+        { 
+          "type": "table", 
+          "title": "Top Métodos gRPC (Requisições)", 
+          "gridPos": { "h": 6, "w": 12, "x": 0, "y": 13 }, 
+          "id": 9, 
+          "datasource": "Prometheus", 
+          "targets": [ { "expr": "topk(10, sum by (method) (rate(validation_grpc_request_duration_seconds_count{job=\"kubernetes-pods-validation-server\"}[1m])))", "legendFormat": "{{method}}", "refId": "A" } ] 
+        },
+        {
+          "type": "timeseries",
+          "title": "CPU por Pod (cores) - validation service",
+          "gridPos": { "h": 6, "w": 8, "x": 0, "y": 19 },
+          "id": 11,
+          "datasource": "Prometheus",
+          "targets": [ { "expr": "sum by (pod) (rate(container_cpu_usage_seconds_total{job=\"kubernetes-pods-validation-server\"}[5m]))", "legendFormat": "{{pod}}", "refId": "A" } ],
+          "fieldConfig": { "defaults": { "unit": "cores" } }
+        },
+        {
+          "type": "timeseries",
+          "title": "Memória por Pod (MB) - validation service",
+          "gridPos": { "h": 6, "w": 8, "x": 8, "y": 19 },
+          "id": 12,
+          "datasource": "Prometheus",
+          "targets": [ { "expr": "sum by (pod) (container_memory_working_set_bytes{job=\"kubernetes-pods-validation-server\"})", "legendFormat": "{{pod}}", "refId": "A" } ],
+          "fieldConfig": { "defaults": { "unit": "bytes" } }
+        },
+        {
+          "type": "timeseries",
+          "title": "Req/s por Pod - validation service",
+          "gridPos": { "h": 6, "w": 12, "x": 0, "y": 25 },
+          "id": 13,
+          "datasource": "Prometheus",
+          "targets": [ { "expr": "sum by (pod) (rate(http_requests_total{job=\"kubernetes-pods-validation-server\"}[1m]))", "legendFormat": "{{pod}}", "refId": "A" } ],
+          "fieldConfig": { "defaults": { "unit": "req/s" } }
+        }
+      ],
+      "refresh": "5s",
+      "schemaVersion": 31,
+      "style": "dark",
+      "tags": ["validation-service","monitoramento","entregue"],
+      "templating": { "list": [ { "name": "datasource", "type": "datasource", "pluginId": "prometheus", "query": "prometheus", "current": { "text": "Prometheus", "value": "Prometheus" } } ] },
+      "time": { "from": "now-15m", "to": "now" },
+      "timepicker": {},
+      "title": "Validation Service — Dashboard Final",
+      "uid": null,
+      "version": 1
+    }

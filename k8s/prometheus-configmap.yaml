@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 5s
+      evaluation_interval: 5s
+
+    scrape_configs:
+      - job_name: 'kubernetes-pods-stub-node'
+        kubernetes_sd_configs:
+          - role: pod
+        metrics_path: /metrics
+        scheme: http
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            action: keep
+            regex: stub-node
+          - source_labels: [__meta_kubernetes_pod_ip]
+            regex: '(.+)'
+            target_label: __address__
+            replacement: $1:8080
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
+
+      - job_name: 'kubernetes-pods-game-server'
+        kubernetes_sd_configs:
+          - role: pod
+        metrics_path: /
+        scheme: http
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            action: keep
+            regex: game-server
+          - source_labels: [__meta_kubernetes_pod_ip]
+            regex: '(.+)'
+            target_label: __address__
+            replacement: $1:8001
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
+
+      - job_name: 'kubernetes-pods-validation-server'
+        kubernetes_sd_configs:
+          - role: pod
+        metrics_path: /
+        scheme: http
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            action: keep
+            regex: validation-server
+          - source_labels: [__meta_kubernetes_pod_ip]
+            regex: '(.+)'
+            target_label: __address__
+            replacement: $1:8002
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
+
+      # - job_name: 'game-service'
+      #   static_configs:
+      #     - targets: ['game-server-service:8001']
+      #   metrics_path: '/'
+      #   scheme: 'http'
+
+      - job_name: 'prometheus'
+        static_configs:
+          - targets: ['localhost:9090']

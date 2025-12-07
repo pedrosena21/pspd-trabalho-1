@@ -1,6 +1,5 @@
 #!/bin/bash
 
-minikube stop
-
-
-eval $(minikube docker-env -u)
+for f in k8s/ ;do
+	kubectl delete -f "$f"
+done

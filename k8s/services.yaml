@@ -4,6 +4,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: stub-node-service
+  labels:
+    app: stub-node
 spec:
   selector:
     app: stub-node
@@ -11,6 +13,7 @@ spec:
     - protocol: TCP
       port: 8080
       targetPort: 8080
+      nodePort: 30080
   type: LoadBalancer
 ---
 apiVersion: v1
@@ -21,10 +24,16 @@ spec:
   selector:
     app: game-server
   ports:
-    - protocol: TCP
+    - name: grpc
+      protocol: TCP
       port: 50051
       targetPort: 50051
-  type: ClusterIP
+      nodePort: 30051
+    - name: metrics
+      protocol: TCP
+      port: 8001
+      targetPort: 8001
+  type: LoadBalancer
 ---
 apiVersion: v1
 kind: Service
@@ -34,7 +43,13 @@ spec:
   selector:
     app: validation-server
   ports:
-    - protocol: TCP
+    - name: grpc
+      protocol: TCP
       port: 50052
       targetPort: 50052
-  type: ClusterIP
+      nodePort: 30052
+    - name: metrics
+      protocol: TCP
+      port: 8002
+      targetPort: 8002
+  type: LoadBalancer

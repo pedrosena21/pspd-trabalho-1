@@ -14,10 +14,12 @@ spec:
       labels:
         app: stub-node
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: debian
       containers:
         - name: stub-node
-          image: stub-node
-          imagePullPolicy: Never
+          image: leonardogonmac/stub-node:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
 ---
@@ -35,12 +37,15 @@ spec:
       labels:
         app: game-server
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: raspberry
       containers:
         - name: game-server
-          image:  service-a-python
-          imagePullPolicy: Never
+          image: leonardogonmac/service-a-python:rpi
+          imagePullPolicy: Always
           ports:
-            - containerPort: 50051
+            - containerPort: 50051 # gRPC
+            - containerPort: 8001  # Prometheus Metrics
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -56,9 +61,12 @@ spec:
       labels:
         app: validation-server
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: vaio
       containers:
         - name: validation-server
-          image: service-b-python
-          imagePullPolicy: Never
+          image: leonardogonmac/service-b-python:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 50052
+            - containerPort: 8002
