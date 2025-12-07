@@ -52,7 +52,7 @@ data:
       - job_name: 'kubernetes-pods-validation-server'
         kubernetes_sd_configs:
           - role: pod
-        metrics_path: /metrics
+        metrics_path: /
         scheme: http
         relabel_configs:
           - source_labels: [__meta_kubernetes_pod_label_app]
@@ -61,7 +61,7 @@ data:
           - source_labels: [__meta_kubernetes_pod_ip]
             regex: '(.+)'
             target_label: __address__
-            replacement: $1:50052
+            replacement: $1:8002
           - source_labels: [__meta_kubernetes_pod_name]
             target_label: pod
           - source_labels: [__meta_kubernetes_namespace]
