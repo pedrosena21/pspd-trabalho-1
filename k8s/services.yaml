@@ -13,6 +13,7 @@ spec:
     - protocol: TCP
       port: 8080
       targetPort: 8080
+      nodePort: 30080
   type: LoadBalancer
 ---
 apiVersion: v1
@@ -31,6 +32,7 @@ spec:
       protocol: TCP
       port: 8001
       targetPort: 8001
+      nodePort: 30051
   type: ClusterIP
 ---
 apiVersion: v1
@@ -44,4 +46,5 @@ spec:
     - protocol: TCP
       port: 50052
       targetPort: 50052
+      nodePort: 30052
   type: ClusterIP

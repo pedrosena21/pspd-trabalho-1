@@ -14,10 +14,13 @@ spec:
       labels:
         app: prometheus
     spec:
+      nodeSelector: 
+        kubernetes.io/hostname: debian
       serviceAccountName: prometheus
       containers:
       - name: prometheus
         image: prom/prometheus:latest
+        imagePullPolicy: Always
         args:
           - '--config.file=/etc/prometheus/prometheus.yml'
           - '--storage.tsdb.path=/prometheus'
