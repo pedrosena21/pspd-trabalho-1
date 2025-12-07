@@ -42,6 +42,8 @@ spec:
       labels:
         app: grafana
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: vaio
       containers:
       - name: grafana
         image: grafana/grafana:latest

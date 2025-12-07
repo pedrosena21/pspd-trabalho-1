@@ -116,5 +116,5 @@ class BingoUser(HttpUser):
 
 if __name__ == "__main__":
     import os
-    host = os.environ.get("LOCUST_HOST", "http://bingo-api:80")
+    host = os.environ.get("LOCUST_HOST", "http://localhost:30080")
     os.system(f"locust -f stress_test/http_test.py --host={host}")

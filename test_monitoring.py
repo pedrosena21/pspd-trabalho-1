@@ -5,7 +5,7 @@ import sys
 from concurrent.futures import ThreadPoolExecutor
 
 # Configuração
-BASE_URL = "http://localhost:8080"  # Endereço do seu port-forward
+BASE_URL = "http://localhost:30080"  # Endereço do seu port-forward
 NUM_GAMES = 10                       # Quantos jogos simultâneos criar
 PLAYERS_PER_GAME = 4                # Jogadores por jogo
 DRAW_SPEED = 0.1                    # Segundos entre sorteios (quanto menor, mais rápido gera métricas)

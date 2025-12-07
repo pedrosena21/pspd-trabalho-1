@@ -28,12 +28,12 @@ spec:
       protocol: TCP
       port: 50051
       targetPort: 50051
+      nodePort: 30051
     - name: metrics
       protocol: TCP
       port: 8001
       targetPort: 8001
-      nodePort: 30051
-  type: ClusterIP
+  type: LoadBalancer
 ---
 apiVersion: v1
 kind: Service
@@ -47,9 +47,9 @@ spec:
       protocol: TCP
       port: 50052
       targetPort: 50052
+      nodePort: 30052
     - name: metrics
       protocol: TCP
       port: 8002
       targetPort: 8002
-      nodePort: 30052
-  type: ClusterIP
+  type: LoadBalancer
